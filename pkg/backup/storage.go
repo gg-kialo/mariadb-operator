@@ -69,10 +69,11 @@ func (f *FileSystemBackupStorage) shouldProcessBackupFile(fileName string, logge
 }
 
 type S3BackupStorageOpts struct {
-	TLS        bool
-	CACertPath string
-	Region     string
-	Prefix     string
+	TLS          bool
+	CACertPath   string
+	Region       string
+	Prefix       string
+	StorageClass string
 }
 
 type S3BackupStorageOpt func(s *S3BackupStorageOpts)
@@ -98,6 +99,12 @@ func WithRegion(region string) S3BackupStorageOpt {
 func WithPrefix(prefix string) S3BackupStorageOpt {
 	return func(s *S3BackupStorageOpts) {
 		s.Prefix = prefix
+	}
+}
+
+func WithStorageClass(storageClass string) S3BackupStorageOpt {
+	return func(s *S3BackupStorageOpts) {
+		s.StorageClass = storageClass
 	}
 }
 

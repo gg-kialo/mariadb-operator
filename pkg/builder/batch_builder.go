@@ -567,6 +567,7 @@ func s3Opts(s3 *mariadbv1alpha1.S3) []command.BackupOpt {
 			s3.Endpoint,
 			s3.Region,
 			s3.Prefix,
+			s3.StorageClass,
 		),
 		command.WithS3TLS(tls.Enabled),
 	}

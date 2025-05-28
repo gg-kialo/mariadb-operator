@@ -553,6 +553,10 @@ type S3 struct {
 	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
 	Prefix string `json:"prefix" webhook:"inmutable"`
+	// StorageClass is the S3 storage class to use.
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	StorageClass string `json:"storageClass" webhook:"inmutable"`
 	// AccessKeyIdSecretKeyRef is a reference to a Secret key containing the S3 access key id.
 	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec

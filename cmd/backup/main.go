@@ -23,13 +23,14 @@ var (
 	targetFilePath    string
 	cleanupTargetFile bool
 
-	s3           bool
-	s3Bucket     string
-	s3Endpoint   string
-	s3Region     string
-	s3TLS        bool
-	s3CACertPath string
-	s3Prefix     string
+	s3             bool
+	s3Bucket       string
+	s3Endpoint     string
+	s3Region       string
+	s3TLS          bool
+	s3CACertPath   string
+	s3Prefix       string
+	s3StorageClass string
 
 	maxRetention time.Duration
 
@@ -60,6 +61,7 @@ func init() {
 	RootCmd.PersistentFlags().BoolVar(&s3TLS, "s3-tls", false, "Enable S3 TLS connections.")
 	RootCmd.PersistentFlags().StringVar(&s3CACertPath, "s3-ca-cert-path", "", "Path to the CA to be trusted when connecting to S3.")
 	RootCmd.PersistentFlags().StringVar(&s3Prefix, "s3-prefix", "", "S3 bucket prefix name to use.")
+	RootCmd.PersistentFlags().StringVar(&s3StorageClass, "s3-storage-class", "", "S3 storage class to use.")
 
 	RootCmd.PersistentFlags().StringVar(&compression, "compression", string(mariadbv1alpha1.CompressNone),
 		"Compression algorithm, none, gzip or bzip2.")
@@ -109,9 +111,9 @@ var RootCmd = &cobra.Command{
 			os.Exit(1)
 		}
 
-		logger.Info("pushing target backup", "file", backupTargetFile, "prefix", s3Prefix)
+		logger.Info("pushing target backup", "file", backupTargetFile, "prefix", s3Prefix, "storageClass", s3StorageClass)
 		if err := backupStorage.Push(ctx, backupTargetFile); err != nil {
-			logger.Error(err, "error pushing target backup", "file", backupTargetFile, "prefix", s3Prefix)
+			logger.Error(err, "error pushing target backup", "file", backupTargetFile, "prefix", s3Prefix, "storageClass", s3StorageClass)
 			os.Exit(1)
 		}
 
@@ -159,6 +161,7 @@ func getBackupStorage() (backup.BackupStorage, error) {
 			backup.WithCACertPath(s3CACertPath),
 			backup.WithRegion(s3Region),
 			backup.WithPrefix(s3Prefix),
+			backup.WithStorageClass(s3StorageClass),
 		)
 	}
 	logger.Info("configuring filesystem backup storage")
